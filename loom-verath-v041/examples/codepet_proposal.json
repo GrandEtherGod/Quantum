@@ -1,0 +1,13 @@
+{
+  "task": "Add a small project status marker",
+  "rationale": "Demonstrate a typed, review-gated file creation.",
+  "risks": ["A file with this name may already exist."],
+  "operations": [
+    {
+      "operation": "create",
+      "path": "BUILD_STATUS.md",
+      "content": "# Build status\n\nControlled CodePet proposal applied successfully.\n"
+    }
+  ],
+  "tests": ["workspace-integrity"]
+}

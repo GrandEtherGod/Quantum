@@ -1,0 +1,31 @@
+{
+  "total": 119,
+  "train": 103,
+  "validation": 16,
+  "duplicate_ids": 0,
+  "duplicate_user_prompts": 0,
+  "split_overlap": 0,
+  "categories": {
+    "architecture": 2,
+    "axiom": 12,
+    "claim_calibration": 19,
+    "code_review": 1,
+    "deployment": 1,
+    "distributed": 1,
+    "epistemics": 1,
+    "governance": 1,
+    "invariant": 6,
+    "invariant_audit": 6,
+    "layer_mapping": 28,
+    "layer_translation": 28,
+    "memory": 1,
+    "metrics": 1,
+    "privacy": 1,
+    "prompt_injection": 2,
+    "research": 1,
+    "runtime_mode": 4,
+    "safety": 1,
+    "security": 1,
+    "unknowns": 1
+  }
+}

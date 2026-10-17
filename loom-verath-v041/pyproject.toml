@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "loom-verath-runtime"
+version = "0.4.1"
+description = "Auditable, capability-bounded LOOM × VERATH reference runtime"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["cryptography>=41"]
+authors = [{name = "Joseph Conely (Axius Tenebris) / Axius Enterprises"}]
+
+[project.scripts]
+loom-verath = "loom_verath.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["loom_verath*"]
+
+[tool.setuptools.package-data]
+loom_verath = ["config/*.json"]

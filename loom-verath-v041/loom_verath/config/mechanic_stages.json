@@ -1,0 +1,181 @@
+[
+  {
+    "id": "core",
+    "name": "LOOM / VERATH governance",
+    "lane": "FORGE",
+    "depends_on": [],
+    "implementation": "implemented",
+    "profile": "core",
+    "acceptance": "Database, state invariants, lineage, ledger and 28-layer authority registry verify",
+    "next": "Independent security review and isolated multi-user deployment"
+  },
+  {
+    "id": "memory",
+    "name": "CHRYSALIS continuity",
+    "lane": "FORGE",
+    "depends_on": [
+      "core"
+    ],
+    "implementation": "implemented",
+    "profile": "memory",
+    "acceptance": "Encrypted note survives retrieval; acceptance marker is tombstoned",
+    "next": "Cross-session recovery and backup restore benchmark"
+  },
+  {
+    "id": "vox",
+    "name": "VOX text command mechanic",
+    "lane": "FORGE",
+    "depends_on": [
+      "core"
+    ],
+    "implementation": "implemented",
+    "profile": "vox",
+    "acceptance": "Bounded grammar dispatches thermal visualization through existing gates",
+    "next": "Consent-based speech transcription adapter"
+  },
+  {
+    "id": "hands",
+    "name": "JINTAI-KAGAMI simulated hand input",
+    "lane": "BRIDGE",
+    "depends_on": [
+      "vox"
+    ],
+    "implementation": "implemented",
+    "profile": "hands",
+    "acceptance": "Normalized gesture confidence passes before simulation dispatch",
+    "next": "Calibrated camera or controller dataset; measure false activations"
+  },
+  {
+    "id": "simulation",
+    "name": "Marion / Shape geometry",
+    "lane": "BRIDGE",
+    "depends_on": [
+      "hands"
+    ],
+    "implementation": "implemented",
+    "profile": "simulation",
+    "acceptance": "16 vertices, 32 edges and deterministic projected geometry; no external effects",
+    "next": "Visual renderer and export workflow"
+  },
+  {
+    "id": "bio_prepare",
+    "name": "BioNeMo research request preparation",
+    "lane": "FORGE",
+    "depends_on": [
+      "core"
+    ],
+    "implementation": "implemented",
+    "profile": "bio_prepare",
+    "acceptance": "Validated bounded Boltz2 payload; hashes in ledger; no network call",
+    "next": "Select public benign target, supply private credential, execute one supported endpoint call"
+  },
+  {
+    "id": "witness",
+    "name": "Chimera stage orchestration / witness",
+    "lane": "FORGE",
+    "depends_on": [
+      "memory",
+      "simulation",
+      "bio_prepare"
+    ],
+    "implementation": "implemented",
+    "profile": "witness",
+    "acceptance": "All local mechanic artifacts retain intact witness, identity and state",
+    "next": "Exercise recovery and failure handling in isolated worker"
+  },
+  {
+    "id": "bio_live",
+    "name": "Boltz2 real inference",
+    "lane": "FORGE",
+    "depends_on": [
+      "bio_prepare"
+    ],
+    "implementation": "adapter_implemented_live_unverified",
+    "profile": null,
+    "acceptance": "One real request returns atom-bearing mmCIF, model confidence and provenance",
+    "blocker": "User-selected research target, NVIDIA credential, endpoint access and research data opt-in required",
+    "next": "bionemo-prepare then bionemo-predict --allow-network"
+  },
+  {
+    "id": "bio_validation",
+    "name": "Biomolecular evidence review",
+    "lane": "BRIDGE",
+    "depends_on": [
+      "bio_live"
+    ],
+    "implementation": "planned",
+    "profile": null,
+    "acceptance": "Independent structure checks, benchmark reference and declared validation metrics",
+    "blocker": "No real inference result or selected benchmark",
+    "next": "Add geometry/chemistry checks and held-out evaluation before interpreting predictions"
+  },
+  {
+    "id": "molecule_pipeline",
+    "name": "GenMol / DiffDock / Boltz2 candidate screening",
+    "lane": "FORGE",
+    "depends_on": [
+      "bio_validation"
+    ],
+    "implementation": "planned",
+    "profile": null,
+    "acceptance": "Target/scaffold defined; SAFE generation, docking, scoring and all candidate artifacts recorded",
+    "blocker": "No protein target, receptor structure, scaffold or assay objective selected",
+    "next": "Use drug-discovery-pipeline skill after target selection"
+  },
+  {
+    "id": "protein_genomics",
+    "name": "Complexa / ProteinMPNN / Evo2 / Parabricks research",
+    "lane": "TEMPLE",
+    "depends_on": [
+      "core"
+    ],
+    "implementation": "planned",
+    "profile": null,
+    "acceptance": "Approved task-specific dataset, licensed checkpoints, GPU preflight and independent evaluation",
+    "blocker": "No task, data, compute or resource budget selected",
+    "next": "Choose one specific protein or genomics question before provisioning models"
+  },
+  {
+    "id": "multimodal",
+    "name": "VOX speech / KAGAMI camera",
+    "lane": "FORGE",
+    "depends_on": [
+      "vox",
+      "hands"
+    ],
+    "implementation": "planned",
+    "profile": null,
+    "acceptance": "Speech and gestures measured on held-out inputs; uncertain commands abstain",
+    "blocker": "No speech provider, camera source or input dataset selected",
+    "next": "Build replayable input fixtures and privacy-controlled adapters"
+  },
+  {
+    "id": "embodiment",
+    "name": "JINTAI physical hardware / hands",
+    "lane": "BRIDGE",
+    "depends_on": [
+      "simulation",
+      "multimodal"
+    ],
+    "implementation": "planned",
+    "profile": null,
+    "acceptance": "Simulator validated; bounded controller, independent stop, bench test and hardware-specific review",
+    "blocker": "No hardware selected; current interface emits no actuator commands",
+    "next": "Specify simulated robot/controller, units and fail-safe behavior"
+  },
+  {
+    "id": "product_release",
+    "name": "Product shell / CHORUS / release",
+    "lane": "FORGE",
+    "depends_on": [
+      "witness",
+      "bio_validation",
+      "multimodal"
+    ],
+    "implementation": "planned",
+    "profile": null,
+    "acceptance": "Authenticated user interface, isolated workers, backup restore, cost bounds, deployment and external review",
+    "blocker": "Research validation, deployment target and production boundary unfinished",
+    "next": "Extend existing local review service after core evidence is established"
+  }
+]

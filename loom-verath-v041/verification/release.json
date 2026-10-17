@@ -1,0 +1,11 @@
+{
+  "version": "0.4.0",
+  "baseline": "LOOM-VERATH-runtime-v0.3.0.zip",
+  "tests": 54,
+  "tests_passed": 54,
+  "local_stages_passed": 7,
+  "live_bionemo_inference": false,
+  "physical_actuation": false,
+  "acceptance_run_id": "7edb215c-7e71-48f7-a426-26815d726d6a",
+  "date": "2026-10-05"
+}

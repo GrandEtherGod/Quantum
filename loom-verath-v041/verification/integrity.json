@@ -1,0 +1,25 @@
+{
+  "config_root": "d0b9fa4860de801850e2fa3b920f3cc369d1eee6f7ab85eae2776b79fe7eb436",
+  "database_schema": {
+    "current": 3,
+    "supported": 3
+  },
+  "ledger": {
+    "checked": 171,
+    "root": "89b311381c325360975e59026b4a02f27cf3c7f89050bce9ca98de3a75809a27",
+    "valid": true
+  },
+  "lineage": {
+    "checked": 12,
+    "root": "27a2a2c6f53572d75a04b3c8469fbdde5aefa937da4d1220f232113c15f1c3d2",
+    "valid": true
+  },
+  "merkle_root": "45b52f8d1be2a5432a3cab0844b04e12bad61eeb63dec58e2ae200a0d18d9750",
+  "sqlite_integrity": "ok",
+  "state": {
+    "findings": [],
+    "state_root": "aa63643e62bd5ec7fcf4bf1ddbef1f8b1387f41e9c3a4fde94329f6509ab9d1d",
+    "valid": true
+  },
+  "valid": true
+}

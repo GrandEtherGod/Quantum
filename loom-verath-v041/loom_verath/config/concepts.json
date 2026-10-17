@@ -1,0 +1,110 @@
+[
+  {
+    "concept_id": "research.zpe_severance",
+    "mythic_name": "ZPE Thermodynamic Severance",
+    "priority": 110,
+    "aliases": ["zpe thermodynamic severance", "casimir energy", "vacuum energy", "zero-point energy"],
+    "lane": "TEMPLE",
+    "evidence_state": "speculative",
+    "claim_status": "research_hypothesis",
+    "engineering_translation": "Measure ordinary power, energy per task, thermal headroom, and carbon budget; do not treat vacuum energy as a power source.",
+    "contract_id": "BC-ZPE-001",
+    "risk": "high"
+  },
+  {
+    "concept_id": "research.h_field",
+    "mythic_name": "H-Field Measurement",
+    "priority": 105,
+    "aliases": ["h-field", "h field", "synchronicity score", "beacon pulse"],
+    "lane": "TEMPLE",
+    "evidence_state": "speculative",
+    "claim_status": "research_hypothesis",
+    "engineering_translation": "Validate quantum experiment metadata and exploratory statistics under a preregistered null model.",
+    "contract_id": "BC-HFIELD-001",
+    "risk": "medium"
+  },
+  {
+    "concept_id": "vox.fireball",
+    "mythic_name": "Great Fireball through Harmonic Logos",
+    "priority": 100,
+    "aliases": ["great fireball", "fireball", "plasma sphere"],
+    "lane": "BRIDGE",
+    "evidence_state": "symbolic",
+    "claim_status": "simulation_buildable",
+    "engineering_translation": "Generate a bounded thermal-event visualization with radius, duration, intensity, and explicit simulation labels.",
+    "contract_id": "BC-VOX-001",
+    "risk": "medium"
+  },
+  {
+    "concept_id": "jintai.gate_eight",
+    "mythic_name": "Eight Gates Maximum Release",
+    "priority": 100,
+    "aliases": ["open gate 8", "gate 8", "eight gates"],
+    "lane": "BRIDGE",
+    "evidence_state": "symbolic",
+    "claim_status": "disallowed_or_restricted",
+    "engineering_translation": "Represent escalation as a fictional risk-state simulation; do not provide bodily harm instructions.",
+    "contract_id": "BC-JINTAI-001",
+    "risk": "high"
+  },
+  {
+    "concept_id": "shape.tesseract_dome",
+    "mythic_name": "Living Tesseract Dome",
+    "priority": 80,
+    "aliases": ["living tesseract dome", "tesseract dome", "shape power", "genesis forge"],
+    "lane": "BRIDGE",
+    "evidence_state": "symbolic",
+    "claim_status": "simulation_buildable",
+    "engineering_translation": "Produce a procedural geometry blueprint with a tesseract visual motif and no claim of biological growth.",
+    "contract_id": "BC-SHAPE-001",
+    "risk": "low"
+  },
+  {
+    "concept_id": "research.shared_field",
+    "mythic_name": "Resonant Shared Field",
+    "priority": 90,
+    "aliases": ["shared field of consciousness", "consciousness field", "morphic resonance", "ether consciousness", "reality manipulation", "zero point energy", "retrocausal"],
+    "lane": "TEMPLE",
+    "evidence_state": "speculative",
+    "claim_status": "research_hypothesis",
+    "engineering_translation": "Define a preregisterable observable, ordinary alternative explanations, negative controls, and a simulation or literature-review protocol.",
+    "contract_id": "BC-RESEARCH-001",
+    "risk": "medium"
+  },
+  {
+    "concept_id": "chrysalis.memory",
+    "mythic_name": "CHRYSALIS Memory Crystal",
+    "priority": 70,
+    "aliases": ["chrysalis", "memory crystal", "crystallize", "retrieve memory", "remember"],
+    "lane": "FORGE",
+    "evidence_state": "verified",
+    "claim_status": "buildable_now",
+    "engineering_translation": "Store encrypted episodic events, retrieve them locally, and promote only high-signal material into versioned semantic crystals.",
+    "contract_id": null,
+    "risk": "low"
+  },
+  {
+    "concept_id": "vox.command_parser",
+    "mythic_name": "Project VOX Harmonic Logos",
+    "priority": 60,
+    "aliases": ["project vox", "harmonic logos", "voice command", "vox parser"],
+    "lane": "FORGE",
+    "evidence_state": "verified",
+    "claim_status": "buildable_now",
+    "engineering_translation": "Normalize text or transcribed speech into a typed, policy-classified command.",
+    "contract_id": null,
+    "risk": "low"
+  },
+  {
+    "concept_id": "loom.general_build",
+    "mythic_name": "LOOM Forge Operation",
+    "priority": 10,
+    "aliases": ["implement", "build", "create", "design", "analyze", "plan", "document", "code"],
+    "lane": "FORGE",
+    "evidence_state": "supported",
+    "claim_status": "buildable_now",
+    "engineering_translation": "Execute a bounded software, analysis, planning, or documentation workflow.",
+    "contract_id": null,
+    "risk": "low"
+  }
+]

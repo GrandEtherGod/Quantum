@@ -1,0 +1,83 @@
+{
+  "run_id": "09a1fad9-33b0-4124-ba6f-a4c967dd177b",
+  "stages": [
+    {
+      "stage": "core",
+      "status": "passed",
+      "lane": "FORGE"
+    },
+    {
+      "stage": "memory",
+      "status": "passed",
+      "lane": "FORGE"
+    },
+    {
+      "stage": "vox",
+      "status": "passed",
+      "lane": "FORGE"
+    },
+    {
+      "stage": "hands",
+      "status": "passed",
+      "lane": "BRIDGE"
+    },
+    {
+      "stage": "simulation",
+      "status": "passed",
+      "lane": "BRIDGE"
+    },
+    {
+      "stage": "bio_prepare",
+      "status": "passed",
+      "lane": "FORGE"
+    },
+    {
+      "stage": "witness",
+      "status": "passed",
+      "lane": "FORGE"
+    },
+    {
+      "stage": "bio_live",
+      "status": "blocked",
+      "lane": "FORGE"
+    },
+    {
+      "stage": "bio_validation",
+      "status": "blocked",
+      "lane": "BRIDGE"
+    },
+    {
+      "stage": "molecule_pipeline",
+      "status": "blocked",
+      "lane": "FORGE"
+    },
+    {
+      "stage": "protein_genomics",
+      "status": "planned",
+      "lane": "TEMPLE"
+    },
+    {
+      "stage": "multimodal",
+      "status": "planned",
+      "lane": "FORGE"
+    },
+    {
+      "stage": "embodiment",
+      "status": "blocked",
+      "lane": "BRIDGE"
+    },
+    {
+      "stage": "product_release",
+      "status": "blocked",
+      "lane": "FORGE"
+    }
+  ],
+  "local_acceptance_passed": true,
+  "entire_design_complete": false,
+  "network_used": false,
+  "hardware_actuation": false,
+  "scope": "fixed local checks; no speech, camera, biological inference, or physical actuation",
+  "report_path": "/tmp/mechanic-build-3hkmzqgo/mechanic_builds/09a1fad9-33b0-4124-ba6f-a4c967dd177b.json",
+  "isolated": true,
+  "report_ephemeral": true
+}

@@ -369,6 +369,21 @@ security and recovery story is accepted.
 
 ---
 
+## 13. Rights
+
+© 2026 Joseph Conely (Axius Tenebris) / Axius Enterprises. **All rights reserved.**
+
+This architecture and design were authored by Joseph Conely
+(Axius Tenebris) (canonical architecture v1.0, 2026-09-13) and are
+the exclusive intellectual property of Joseph Conely / Axius Enterprises. This repository is
+publicly visible for review only: **publication grants no license** —
+no right to copy, derive from, or commercially use the design, and no
+right to the names LOOM, VERATH, Chrono-Scribe, CHRYSALIS,
+AetherLinkOS, or Theia. See `LICENSE` and `NOTICE.md` in this
+repository.
+
+---
+
 *Architecture: LOOM × VERATH canonical system architecture v1.0
 (Axius Tenebris, 2026-09-13). Status figures: system-wide benchmark of
 2026-10-10 and the sealed run records it cites. This document describes a

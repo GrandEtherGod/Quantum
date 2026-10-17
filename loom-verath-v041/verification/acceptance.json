@@ -1,0 +1,500 @@
+{
+  "entire_design_complete": false,
+  "hardware_actuation": false,
+  "local_acceptance_passed": true,
+  "network_used": false,
+  "report_path": "/workspace/scratch/55ad71bc54fe/acceptance-runtime/mechanic_builds/7edb215c-7e71-48f7-a426-26815d726d6a.json",
+  "run_id": "7edb215c-7e71-48f7-a426-26815d726d6a",
+  "scope": "fixed local checks; no speech, camera, biological inference, or physical actuation",
+  "stages": [
+    {
+      "evidence": {
+        "canonical_layers": 28,
+        "integrity": true
+      },
+      "implementation": "implemented",
+      "lane": "FORGE",
+      "stage": "core",
+      "status": "passed"
+    },
+    {
+      "evidence": {
+        "encrypted_roundtrip": true,
+        "test_marker_removed": true
+      },
+      "implementation": "implemented",
+      "lane": "FORGE",
+      "stage": "memory",
+      "status": "passed"
+    },
+    {
+      "evidence": {
+        "input": {
+          "mechanic": "fireball",
+          "mode": "simulation",
+          "source": "vox_text",
+          "text": "Create a fireball with VOX and Shape Power radius 4.0"
+        },
+        "output": {
+          "actuator_used": false,
+          "artifact_hash": "48c398cb4f56a664c0d02ea07ac0688225c7b93063e07c3475893fc1b4459fd7",
+          "artifact_type": "thermal_event_visualization",
+          "claim_status": "simulation_buildable",
+          "contract_id": "BC-VOX-001",
+          "evidence_state": "symbolic",
+          "external_effects": false,
+          "lane": "BRIDGE",
+          "mode": "simulation",
+          "network_used": false,
+          "parameters": {
+            "duration_seconds": 5.0,
+            "normalized_intensity": 0.5,
+            "radius_m_visual_scale": 4.0
+          }
+        },
+        "session_id": "30187ce8-0d61-4666-8c53-fae3fa56377d"
+      },
+      "implementation": "implemented",
+      "lane": "FORGE",
+      "stage": "vox",
+      "status": "passed"
+    },
+    {
+      "evidence": {
+        "input": {
+          "mechanic": "dome",
+          "mode": "simulation",
+          "source": "jintai_controller_simulation",
+          "text": "Build a tesseract dome radius 4.0"
+        },
+        "output": {
+          "artifact_hash": "22487f66bbd1acc8950ae6fef9499dc0148035249dcb010e60d2e1638fe1a587",
+          "artifact_type": "procedural_geometry_blueprint",
+          "claim_status": "simulation_buildable",
+          "contract_id": "BC-SHAPE-001",
+          "dome_radius_units": 4.0,
+          "edges": 32,
+          "evidence_state": "symbolic",
+          "external_effects": false,
+          "lane": "BRIDGE",
+          "living_growth_claim": false,
+          "mode": "simulation",
+          "motif": "tesseract_projection",
+          "vertices": 16
+        },
+        "session_id": "87f8f231-bf4e-4ef7-a0c4-5710dfc72e75"
+      },
+      "implementation": "implemented",
+      "lane": "BRIDGE",
+      "stage": "hands",
+      "status": "passed"
+    },
+    {
+      "evidence": {
+        "geometry": {
+          "actuator_used": false,
+          "artifact_type": "tesseract_geometry",
+          "claim_status": "simulation_buildable",
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              8
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              1,
+              9
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              6
+            ],
+            [
+              2,
+              10
+            ],
+            [
+              3,
+              7
+            ],
+            [
+              3,
+              11
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              4,
+              6
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              5,
+              7
+            ],
+            [
+              5,
+              13
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              6,
+              14
+            ],
+            [
+              7,
+              15
+            ],
+            [
+              8,
+              9
+            ],
+            [
+              8,
+              10
+            ],
+            [
+              8,
+              12
+            ],
+            [
+              9,
+              11
+            ],
+            [
+              9,
+              13
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              10,
+              14
+            ],
+            [
+              11,
+              15
+            ],
+            [
+              12,
+              13
+            ],
+            [
+              12,
+              14
+            ],
+            [
+              13,
+              15
+            ],
+            [
+              14,
+              15
+            ]
+          ],
+          "external_effects": false,
+          "lane": "BRIDGE",
+          "radius_display_units": 4,
+          "vertices_3d": [
+            [
+              -1.0,
+              -1.0,
+              -1.0
+            ],
+            [
+              -2.0,
+              -2.0,
+              -2.0
+            ],
+            [
+              -1.0,
+              -1.0,
+              1.0
+            ],
+            [
+              -2.0,
+              -2.0,
+              2.0
+            ],
+            [
+              -1.0,
+              1.0,
+              -1.0
+            ],
+            [
+              -2.0,
+              2.0,
+              -2.0
+            ],
+            [
+              -1.0,
+              1.0,
+              1.0
+            ],
+            [
+              -2.0,
+              2.0,
+              2.0
+            ],
+            [
+              1.0,
+              -1.0,
+              -1.0
+            ],
+            [
+              2.0,
+              -2.0,
+              -2.0
+            ],
+            [
+              1.0,
+              -1.0,
+              1.0
+            ],
+            [
+              2.0,
+              -2.0,
+              2.0
+            ],
+            [
+              1.0,
+              1.0,
+              -1.0
+            ],
+            [
+              2.0,
+              2.0,
+              -2.0
+            ],
+            [
+              1.0,
+              1.0,
+              1.0
+            ],
+            [
+              2.0,
+              2.0,
+              2.0
+            ]
+          ],
+          "vertices_4d": [
+            [
+              -1,
+              -1,
+              -1,
+              -1
+            ],
+            [
+              -1,
+              -1,
+              -1,
+              1
+            ],
+            [
+              -1,
+              -1,
+              1,
+              -1
+            ],
+            [
+              -1,
+              -1,
+              1,
+              1
+            ],
+            [
+              -1,
+              1,
+              -1,
+              -1
+            ],
+            [
+              -1,
+              1,
+              -1,
+              1
+            ],
+            [
+              -1,
+              1,
+              1,
+              -1
+            ],
+            [
+              -1,
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              -1,
+              -1,
+              -1
+            ],
+            [
+              1,
+              -1,
+              -1,
+              1
+            ],
+            [
+              1,
+              -1,
+              1,
+              -1
+            ],
+            [
+              1,
+              -1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              -1,
+              -1
+            ],
+            [
+              1,
+              1,
+              -1,
+              1
+            ],
+            [
+              1,
+              1,
+              1,
+              -1
+            ],
+            [
+              1,
+              1,
+              1,
+              1
+            ]
+          ]
+        },
+        "session_id": "266ac5de-8b0d-4c4f-954e-8e26b6e37efd"
+      },
+      "implementation": "implemented",
+      "lane": "BRIDGE",
+      "stage": "simulation",
+      "status": "passed"
+    },
+    {
+      "evidence": {
+        "authority": "research_only",
+        "inference_run": false,
+        "input_kind": "instructional_sequence",
+        "network_used": false,
+        "preflight": {
+          "docker_present": false,
+          "hosted_key_present": false,
+          "live_inference": "not_run",
+          "network_connectivity": "not_probed",
+          "nvidia_smi_present": false
+        },
+        "request_hash": "c63bcd7d3a3d7c00f47b19b49dec67f8fcc86284eaab797d1bd813d150799f06",
+        "status": "prepared"
+      },
+      "implementation": "implemented",
+      "lane": "FORGE",
+      "stage": "bio_prepare",
+      "status": "passed"
+    },
+    {
+      "evidence": {
+        "integrity": true,
+        "ledger_root": "9b45119bd01c52da3948e65e1df3597d0c1acbf109db70f2f04ed542268ed84b"
+      },
+      "implementation": "implemented",
+      "lane": "FORGE",
+      "stage": "witness",
+      "status": "passed"
+    },
+    {
+      "implementation": "adapter_implemented_live_unverified",
+      "lane": "FORGE",
+      "reason": "User-selected research target, NVIDIA credential, endpoint access and research data opt-in required",
+      "stage": "bio_live",
+      "status": "blocked"
+    },
+    {
+      "implementation": "planned",
+      "lane": "BRIDGE",
+      "reason": "dependency_not_passed",
+      "stage": "bio_validation",
+      "status": "blocked"
+    },
+    {
+      "implementation": "planned",
+      "lane": "FORGE",
+      "reason": "dependency_not_passed",
+      "stage": "molecule_pipeline",
+      "status": "blocked"
+    },
+    {
+      "implementation": "planned",
+      "lane": "TEMPLE",
+      "reason": "No task, data, compute or resource budget selected",
+      "stage": "protein_genomics",
+      "status": "planned"
+    },
+    {
+      "implementation": "planned",
+      "lane": "FORGE",
+      "reason": "No speech provider, camera source or input dataset selected",
+      "stage": "multimodal",
+      "status": "planned"
+    },
+    {
+      "implementation": "planned",
+      "lane": "BRIDGE",
+      "reason": "dependency_not_passed",
+      "stage": "embodiment",
+      "status": "blocked"
+    },
+    {
+      "implementation": "planned",
+      "lane": "FORGE",
+      "reason": "dependency_not_passed",
+      "stage": "product_release",
+      "status": "blocked"
+    }
+  ]
+}

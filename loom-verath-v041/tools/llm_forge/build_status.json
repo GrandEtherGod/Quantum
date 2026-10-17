@@ -1,0 +1,18 @@
+{
+  "artifact": "VERATH-Theia Custom LLM Forge",
+  "base_model": "Qwen/Qwen3-1.7B",
+  "connected_hugging_face_account": "ArchitectAxius",
+  "dataset_repo": "ArchitectAxius/verath-asi-sft-v1",
+  "target_model_repo": "ArchitectAxius/VERATH-Theia-Qwen3-1.7B-LoRA-v1",
+  "dataset_generated": true,
+  "local_validation_complete": true,
+  "training_job_submitted": false,
+  "weights_trained": false,
+  "external_blocker": "The connected credential exposes jobs/read scopes but no repository-write scope; persistent dataset and model publication cannot succeed until write access is granted. A positive Jobs credit balance is also required.",
+  "claims": {
+    "asi_created": false,
+    "consciousness_created": false,
+    "speculative_physics_verified": false,
+    "universal_alignment_proven": false
+  }
+}
