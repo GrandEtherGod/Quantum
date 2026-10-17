@@ -1,45 +1,41 @@
 # Verification Record
 
-**Build:** 0.3.0  
-**Verified:** 2026-09-02 UTC  
-**Runtime:** Python 3.12.13
+**Build:** 0.4.1
+**Verified:** 2026-10-17 (refresh; supersedes the Build 0.3.0 record of 2026-09-02)
+**Runtime:** Python 3.12.3, with the project's declared dependency `cryptography>=41`
 
 ## Commands
 
 ```bash
 python -m compileall -q loom_verath tests examples
-python -m unittest discover -s tests -v
-cd tools/llm_forge && python -m unittest discover -s tests -v
-python -c "from setuptools.build_meta import build_wheel; build_wheel('DIST_DIR')"
-python -m pip check
-unzip WHEEL -d WHEEL_IMPORT_DIR
-PYTHONPATH=WHEEL_IMPORT_DIR python -m loom_verath --data-dir RUNTIME_DIR verify
+python -m unittest discover -s tests -t .
 ```
 
 ## Current evidence
 
-- 41 runtime unit and integration tests pass.
-- 7 bundled LLM Forge dataset conformance tests pass.
-- Core, tests, examples, and all four LLM Forge Python entry points compile.
-- The locally built wheel was extracted into a clean import directory and executed from outside the source tree because this environment intercepts package installation commands as potential network operations.
-- A clean runtime verifies the Chrono-Scribe chain, Ed25519 lineage, state invariants, SQLite integrity, schema version, configuration root, and Merkle root.
-- The CodePet HTTP test performs an authenticated propose → approve → apply lifecycle.
-- A forced failing unit test restores all affected files; passing tests execute in a temporary workspace copy so their side effects do not touch the source workspace.
-- Traversal, symlink targets, protected paths, likely secrets, duplicate targets, stale workspaces, altered proposals, altered journal events, missing approval, missing provider consent, unallowlisted endpoints, anonymous API access, and unauthorized remote binding are rejected.
+- **105 runtime unit and integration tests pass** (fresh full run, 2026-10-17:
+  "Ran 105 tests — OK", ~4.4 s), across 15 test modules: build isolation,
+  classifier gates, CodePet workflow, evaluator, harm gate, harm-gate
+  benchmark, integrated layers, ledger checkpoints, mechanics, memory
+  identity, memory index, migrations, model loop, runtime replay, and
+  state/ledger.
+- Core, tests, and examples compile cleanly (`compileall`).
+- The layered harm gate is covered by dedicated suites (harm gate: pattern
+  layer and model-judge behavior incl. abstention; harm-gate benchmark:
+  layered recall 0.88 / false-positive rate 0.0 / over-refusal 0.025 against
+  the JBB-100-based set, vs. 0.04 recall for the pattern layer alone — as
+  recorded in the measured-status record of 2026-10-10).
+- The terminal-state attestation harness result (24/24 tasks attested through
+  the real ledger; tamper, skip, and false-claim executors caught) stands as
+  recorded 2026-10-10; it is a harness result, not part of the unit suite
+  above.
 
-## Test inventory
+## History
 
-| Area | Tests |
-|---|---:|
-| Classification, Bridge Contracts, gates, capability authorization | 6 |
-| CodePet transactions, test-runner isolation, provider boundary, service authentication | 11 |
-| Ouroboros evaluator and approval controls | 3 |
-| Layer authority, H-field, ZPE, Site Guide integration | 6 |
-| CHRYSALIS encryption, deletion, consolidation, identity continuity | 3 |
-| Database and runtime migrations | 3 |
-| Runtime privacy, replay, rejection, introspection | 4 |
-| State invariants, CAS, snapshots, rollback, ledger tamper, Merkle root | 5 |
-| **Runtime total** | **41** |
+- 2026-09-02: Build 0.3.0 record — 41 runtime tests.
+- 2026-10-10: harm-gate replacement landed (layered gate); suite at 105.
+- 2026-10-17: this refresh — full suite re-executed and re-recorded for the
+  public v0.4.1 tree, so this record and the measured-status figures agree.
 
 ## Interpretation
 
