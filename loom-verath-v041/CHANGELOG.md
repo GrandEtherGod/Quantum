@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Added an LLM bridge to ChatGPT and Claude in `providers.py`: `AnthropicMessagesProvider` (Claude Messages API) alongside the existing `OpenAICompatibleProvider` (ChatGPT), plus `chatgpt_provider()` and `claude_provider()` factories that pin the official API hosts and default credential env vars.
+- Factored the hardened external-call path into shared helpers (`_validate_provider_endpoint`, `_validate_provider_options`, `_post_json`): HTTPS-only allowlisted hosts, no redirects, no URL credentials/query/fragment, consent gate, credential env var, 2 MB response cap.
+- Bridge output remains untrusted: it flows through `ProviderProposalService` into an `awaiting_review` proposal with local revalidation and never grants approval or performs a write.
+- Added loopback-free unit tests for the bridge: endpoint/option validation, consent and credential fail-closed behavior, envelope parsing (including malformed-envelope rejection), factory host pinning, and proposal-service flow.
+
 ## 0.3.0 — 2026-09-02
 
 - Added typed CodePet create, modify, and delete proposals with deterministic unified diffs.

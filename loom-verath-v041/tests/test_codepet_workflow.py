@@ -12,7 +12,15 @@ from pathlib import Path
 from loom_verath.cli import main
 from loom_verath.codepet import CodePetWorkspace
 from loom_verath.errors import CodePetError, ProposalStateError, StaleProposalError, WorkspaceBoundaryError
-from loom_verath.providers import DeterministicProvider, OpenAICompatibleProvider, ProviderProposalService, ProviderRequest
+from loom_verath.providers import (
+    AnthropicMessagesProvider,
+    DeterministicProvider,
+    OpenAICompatibleProvider,
+    ProviderProposalService,
+    ProviderRequest,
+    chatgpt_provider,
+    claude_provider,
+)
 from loom_verath.service import build_server
 
 
@@ -177,6 +185,109 @@ class CodePetWorkflowTests(unittest.TestCase):
         provider = OpenAICompatibleProvider(endpoint="https://example.test/v1", model="x", api_key_env="TEST_KEY", allowed_hosts={"example.test"})
         with self.assertRaises(CodePetError):
             provider.complete(ProviderRequest("task", ()), consent=False)
+
+    def test_anthropic_provider_requires_https_allowlist_and_consent(self):
+        with self.assertRaises(CodePetError):
+            AnthropicMessagesProvider(endpoint="http://example.test/v1", model="x", api_key_env="TEST_KEY", allowed_hosts={"example.test"})
+        with self.assertRaises(CodePetError):
+            AnthropicMessagesProvider(endpoint="https://other.test/v1", model="x", api_key_env="TEST_KEY", allowed_hosts={"example.test"})
+        with self.assertRaises(CodePetError):
+            AnthropicMessagesProvider(endpoint="https://example.test/v1?key=1", model="x", api_key_env="TEST_KEY", allowed_hosts={"example.test"})
+        with self.assertRaises(CodePetError):
+            AnthropicMessagesProvider(endpoint="https://example.test/v1", model="x", api_key_env="not an identifier", allowed_hosts={"example.test"})
+        with self.assertRaises(CodePetError):
+            AnthropicMessagesProvider(endpoint="https://example.test/v1", model="x", api_key_env="TEST_KEY", allowed_hosts={"example.test"}, max_tokens=0)
+        with self.assertRaises(CodePetError):
+            AnthropicMessagesProvider(endpoint="https://example.test/v1", model="x", api_key_env="TEST_KEY", allowed_hosts={"example.test"}, anthropic_version="bad\"version")
+        provider = AnthropicMessagesProvider(endpoint="https://example.test/v1", model="x", api_key_env="TEST_KEY", allowed_hosts={"example.test"})
+        self.assertEqual("anthropic-messages", provider.name)
+        self.assertTrue(provider.external)
+        with self.assertRaises(CodePetError):
+            provider.complete(ProviderRequest("task", ()), consent=False)
+
+    def _anthropic_test_provider(self) -> AnthropicMessagesProvider:
+        return AnthropicMessagesProvider(
+            endpoint="https://api.anthropic.com/v1/messages",
+            model="claude-test",
+            api_key_env="TEST_ANTHROPIC_KEY",
+            allowed_hosts={"api.anthropic.com"},
+        )
+
+    def test_anthropic_envelope_parsing(self):
+        payload = {"content": [{"type": "text", "text": "{\"operations\":[]}"}, {"type": "thinking", "thinking": "skip"}]}
+        captured = {}
+
+        def fake_post(endpoint, body, headers, timeout_seconds):
+            captured["endpoint"] = endpoint
+            captured["body"] = json.loads(body)
+            captured["headers"] = headers
+            return json.dumps(payload).encode("utf-8")
+
+        provider = self._anthropic_test_provider()
+        with patch.dict(os.environ, {"TEST_ANTHROPIC_KEY": "test-key-value"}), patch("loom_verath.providers._post_json", side_effect=fake_post):
+            response = provider.complete(ProviderRequest("task", ()), consent=True)
+        self.assertEqual("{\"operations\":[]}", response.content)
+        self.assertEqual("claude-test", response.model)
+        self.assertEqual("anthropic-messages", response.provider)
+        self.assertEqual("https://api.anthropic.com/v1/messages", captured["endpoint"])
+        self.assertEqual("test-key-value", captured["headers"]["x-api-key"])
+        self.assertEqual("2023-06-01", captured["headers"]["anthropic-version"])
+        self.assertEqual("claude-test", captured["body"]["model"])
+        self.assertEqual(provider.system_prompt, captured["body"]["system"])
+        self.assertEqual(1, len(captured["body"]["messages"]))
+        self.assertEqual(0, captured["body"]["temperature"])
+
+    def test_anthropic_invalid_envelopes_fail_closed(self):
+        for payload in [
+            b"not json",
+            {"content": []},
+            {"content": [{"type": "text", "text": 42}]},
+            {"unexpected": True},
+        ]:
+            provider = self._anthropic_test_provider()
+            with patch.dict(os.environ, {"TEST_ANTHROPIC_KEY": "k"}), patch(
+                "loom_verath.providers._post_json",
+                side_effect=lambda *a, **k: payload if isinstance(payload, bytes) else json.dumps(payload).encode("utf-8"),
+            ):
+                with self.assertRaises(CodePetError):
+                    provider.complete(ProviderRequest("task", ()), consent=True)
+
+    def test_anthropic_missing_credential_fails_closed(self):
+        provider = self._anthropic_test_provider()
+        env = {k: v for k, v in os.environ.items() if k != "TEST_ANTHROPIC_KEY"}
+        with patch.dict(os.environ, env, clear=True):
+            with self.assertRaises(CodePetError):
+                provider.complete(ProviderRequest("task", ()), consent=True)
+
+    def test_provider_factories_pin_official_hosts(self):
+        chatgpt = chatgpt_provider()
+        self.assertEqual("https://api.openai.com/v1/chat/completions", chatgpt.endpoint)
+        self.assertEqual("OPENAI_API_KEY", chatgpt.api_key_env)
+        self.assertTrue(chatgpt.external)
+
+        claude = claude_provider()
+        self.assertIsInstance(claude, AnthropicMessagesProvider)
+        self.assertEqual("https://api.anthropic.com/v1/messages", claude.endpoint)
+        self.assertEqual("ANTHROPIC_API_KEY", claude.api_key_env)
+        self.assertTrue(claude.external)
+
+    def test_external_providers_flow_through_proposal_service_as_untrusted(self):
+        provider = DeterministicProvider(
+            {
+                "operations": [{"operation": "modify", "path": "main.py", "content": "VALUE = 7\n"}],
+                "tests": ["python-compile"],
+                "rationale": "fixture",
+                "risks": [],
+            }
+        )
+        proposal = ProviderProposalService(self.pet).propose(provider, "bump", context_paths=[])
+        self.assertEqual("deterministic_provider", proposal["source"])
+        self.assertEqual("awaiting_review", proposal["state"])
+
+        claude = claude_provider()
+        self.assertTrue(claude.external)
+        with self.assertRaises(CodePetError):
+            ProviderProposalService(self.pet).propose(claude, "bump", context_paths=[], external_consent=False)
 
     def test_pet_cli_does_not_create_unrelated_runtime(self):
         runtime_path = Path(self.temp.name) / "must-not-exist"
