@@ -22,6 +22,39 @@ class _NoRedirect(urllib.request.HTTPRedirectHandler):
         return None
 
 
+MAX_PROVIDER_RESPONSE_BYTES = 2_000_000
+
+
+def _validate_provider_endpoint(endpoint: str, allowed_hosts: set[str]) -> None:
+    parsed = urlparse(endpoint)
+    if parsed.scheme != "https" or not parsed.hostname or parsed.hostname not in allowed_hosts:
+        raise CodePetError("Provider endpoint must be HTTPS and explicitly host-allowlisted")
+    if parsed.username or parsed.password or parsed.fragment or parsed.query:
+        raise CodePetError("Provider endpoint cannot contain credentials, a query, or a fragment")
+
+
+def _validate_provider_options(api_key_env: str, timeout_seconds: int) -> None:
+    if not api_key_env.isidentifier():
+        raise CodePetError("api_key_env must be an environment-variable identifier")
+    if not 1 <= timeout_seconds <= 120:
+        raise CodePetError("Provider timeout must be in [1, 120]")
+
+
+def _post_json(endpoint: str, body: bytes, headers: dict[str, str], timeout_seconds: int) -> bytes:
+    request_object = urllib.request.Request(endpoint, data=body, method="POST", headers=headers)
+    try:
+        opener = urllib.request.build_opener(_NoRedirect)
+        with opener.open(request_object, timeout=timeout_seconds) as response:
+            if response.status != 200:
+                raise CodePetError(f"Provider returned HTTP {response.status}")
+            raw = response.read(MAX_PROVIDER_RESPONSE_BYTES + 1)
+    except urllib.error.URLError as exc:
+        raise CodePetError(f"Provider request failed: {exc.reason}") from exc
+    if len(raw) > MAX_PROVIDER_RESPONSE_BYTES:
+        raise CodePetError("Provider response exceeds the size limit")
+    return raw
+
+
 @dataclass(frozen=True)
 class ProviderRequest:
     task: str
@@ -72,15 +105,8 @@ class OpenAICompatibleProvider:
         timeout_seconds: int = 45,
         system_prompt: str | None = None,
     ):
-        parsed = urlparse(endpoint)
-        if parsed.scheme != "https" or not parsed.hostname or parsed.hostname not in allowed_hosts:
-            raise CodePetError("Provider endpoint must be HTTPS and explicitly host-allowlisted")
-        if parsed.username or parsed.password or parsed.fragment or parsed.query:
-            raise CodePetError("Provider endpoint cannot contain credentials, a query, or a fragment")
-        if not api_key_env.isidentifier():
-            raise CodePetError("api_key_env must be an environment-variable identifier")
-        if not 1 <= timeout_seconds <= 120:
-            raise CodePetError("Provider timeout must be in [1, 120]")
+        _validate_provider_endpoint(endpoint, allowed_hosts)
+        _validate_provider_options(api_key_env, timeout_seconds)
         self.endpoint = endpoint
         self.model = model
         self.api_key_env = api_key_env
@@ -105,22 +131,12 @@ class OpenAICompatibleProvider:
                 ],
             }
         ).encode("utf-8")
-        request_object = urllib.request.Request(
+        raw = _post_json(
             self.endpoint,
-            data=body,
-            method="POST",
-            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            body,
+            {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            self.timeout_seconds,
         )
-        try:
-            opener = urllib.request.build_opener(_NoRedirect)
-            with opener.open(request_object, timeout=self.timeout_seconds) as response:
-                if response.status != 200:
-                    raise CodePetError(f"Provider returned HTTP {response.status}")
-                raw = response.read(2_000_001)
-        except urllib.error.URLError as exc:
-            raise CodePetError(f"Provider request failed: {exc.reason}") from exc
-        if len(raw) > 2_000_000:
-            raise CodePetError("Provider response exceeds the size limit")
         try:
             payload = json.loads(raw)
             content = payload["choices"][0]["message"]["content"]
@@ -129,6 +145,114 @@ class OpenAICompatibleProvider:
         if not isinstance(content, str):
             raise CodePetError("Provider completion content must be text")
         return ProviderResponse(content, self.model, self.name)
+
+
+class AnthropicMessagesProvider:
+    """Minimal opt-in adapter for the Anthropic Messages API (Claude)."""
+
+    name = "anthropic-messages"
+    external = True
+
+    def __init__(
+        self,
+        *,
+        endpoint: str,
+        model: str,
+        api_key_env: str,
+        allowed_hosts: set[str],
+        timeout_seconds: int = 45,
+        max_tokens: int = 4096,
+        anthropic_version: str = "2023-06-01",
+        system_prompt: str | None = None,
+    ):
+        _validate_provider_endpoint(endpoint, allowed_hosts)
+        _validate_provider_options(api_key_env, timeout_seconds)
+        if not 1 <= max_tokens <= 200_000:
+            raise CodePetError("max_tokens must be in [1, 200000]")
+        if not anthropic_version or any(ch in anthropic_version for ch in "\"' \t\r\n"):
+            raise CodePetError("anthropic_version must be a plain header token")
+        self.endpoint = endpoint
+        self.model = model
+        self.api_key_env = api_key_env
+        self.timeout_seconds = timeout_seconds
+        self.max_tokens = max_tokens
+        self.anthropic_version = anthropic_version
+        self.system_prompt = SYSTEM_PROMPT if system_prompt is None else system_prompt
+
+    def complete(self, request: ProviderRequest, *, consent: bool = False) -> ProviderResponse:
+        if consent is not True:
+            raise CodePetError("Affirmative consent is required before an external model call")
+        api_key = os.environ.get(self.api_key_env)
+        if not api_key:
+            raise CodePetError(f"Provider credential environment variable is unavailable: {self.api_key_env}")
+        user_payload = {"task": request.task, "selected_context": list(request.context)}
+        body = json.dumps(
+            {
+                "model": self.model,
+                "max_tokens": self.max_tokens,
+                "temperature": 0,
+                "system": self.system_prompt,
+                "messages": [
+                    {"role": "user", "content": json.dumps(user_payload, ensure_ascii=False)},
+                ],
+            }
+        ).encode("utf-8")
+        raw = _post_json(
+            self.endpoint,
+            body,
+            {
+                "x-api-key": api_key,
+                "anthropic-version": self.anthropic_version,
+                "Content-Type": "application/json",
+            },
+            self.timeout_seconds,
+        )
+        try:
+            payload = json.loads(raw)
+            blocks = payload["content"]
+            if not isinstance(blocks, list) or not blocks:
+                raise KeyError("content")
+            parts = [block["text"] for block in blocks if isinstance(block, dict) and block.get("type") == "text"]
+            content = "".join(part for part in parts if isinstance(part, str))
+            if not content:
+                raise CodePetError("Provider returned no text content")
+        except (json.JSONDecodeError, KeyError, IndexError, TypeError) as exc:
+            raise CodePetError("Provider returned an invalid completion envelope") from exc
+        return ProviderResponse(content, self.model, self.name)
+
+
+def chatgpt_provider(
+    *, model: str = "gpt-5", api_key_env: str = "OPENAI_API_KEY"
+) -> OpenAICompatibleProvider:
+    """Build a ChatGPT (OpenAI) provider for the proposal/loop boundary (no call is made).
+
+    Constructing this object performs no network access and reads no credential;
+    the allowlist pins the endpoint to the official OpenAI API host.
+    """
+    return OpenAICompatibleProvider(
+        endpoint="https://api.openai.com/v1/chat/completions",
+        model=model,
+        api_key_env=api_key_env,
+        allowed_hosts={"api.openai.com"},
+    )
+
+
+def claude_provider(
+    *, model: str = "claude-sonnet-4-5", api_key_env: str = "ANTHROPIC_API_KEY"
+) -> AnthropicMessagesProvider:
+    """Build a Claude (Anthropic) provider for the proposal/loop boundary (no call is made).
+
+    Constructing this object performs no network access and reads no credential;
+    the allowlist pins the endpoint to the official Anthropic API host. The exact
+    served model id must be confirmed against the provider's model list at first
+    live use.
+    """
+    return AnthropicMessagesProvider(
+        endpoint="https://api.anthropic.com/v1/messages",
+        model=model,
+        api_key_env=api_key_env,
+        allowed_hosts={"api.anthropic.com"},
+    )
 
 
 class ProviderProposalService:

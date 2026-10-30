@@ -56,7 +56,7 @@ The runner probes Bubblewrap rather than trusting its presence. If namespace cre
 
 ## Provider boundary
 
-`providers.py` offers a deterministic offline conformance provider and an OpenAI-compatible adapter. External calls require:
+`providers.py` offers a deterministic offline conformance provider and two external adapters — `OpenAICompatibleProvider` for ChatGPT (and any OpenAI-compatible endpoint) and `AnthropicMessagesProvider` for Claude. Convenience factories `chatgpt_provider()` and `claude_provider()` pin the official API hosts (`api.openai.com`, `api.anthropic.com`) and default credential variables (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`); constructing them performs no network access and reads no credential. External calls require:
 
 - affirmative consent for that call;
 - an HTTPS endpoint whose hostname is explicitly allowlisted;
